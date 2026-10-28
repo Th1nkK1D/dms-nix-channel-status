@@ -1,0 +1,15 @@
+{
+  "id": "nixChannelStatus",
+  "name": "Nix Channel Status",
+  "description": "Watches a status.nixos.org channel and highlights when it is ahead of your flake.lock",
+  "version": "0.1.0",
+  "author": "Th1nkK1D",
+  "icon": "ac_unit",
+  "type": "widget",
+  "capabilities": ["dankbar-widget"],
+  "component": "./NixChannelWidget.qml",
+  "settings": "./NixChannelSettings.qml",
+  "requires_dms": ">=2.0.0",
+  "dependencies": ["curl"],
+  "permissions": ["settings_read", "settings_write", "process", "network"]
+}

@@ -41,6 +41,7 @@ user-chosen `flake.lock`.
 ./dev.sh logs      # journalctl --user -fu dms
 ./dev.sh fmt       # qmlformat -i *.qml
 ./dev.sh fmt-check # exit 1 if any *.qml is unformatted
+node parse.test.mjs # self-check for parse.js (pure JSON parsing, kept out of QML so node can run it)
 ```
 First time: Settings → Plugins → Scan for Plugins → enable → add "Nix Channel Status" to a bar section.
 

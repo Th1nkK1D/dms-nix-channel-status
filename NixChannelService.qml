@@ -122,9 +122,11 @@ Item {
             return "just now";
         if (mins < 60)
             return mins + "m ago";
-        if (mins < 48 * 60)
-            return Math.floor(mins / 60) + "h ago";
-        return Math.floor(mins / 1440) + "d ago";
+        const hours = Math.floor(mins / 60);
+        if (hours < 24)
+            return hours + "h ago";
+        const leftover = hours % 24;
+        return Math.floor(hours / 24) + "d" + (leftover ? " " + leftover + "h" : "") + " ago";
     }
 
     function compareUrl() {

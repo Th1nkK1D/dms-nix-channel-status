@@ -56,6 +56,15 @@ PluginComponent {
                         spacing: Theme.spacingXS
 
                         DActionButton {
+                            iconName: "open_in_new"
+                            tooltipText: "Open status.nixos.org"
+                            onClicked: {
+                                Qt.openUrlExternally("https://status.nixos.org");
+                                popoutRoot.close();
+                            }
+                        }
+
+                        DActionButton {
                             iconName: "settings"
                             tooltipText: "Open plugin settings"
                             onClicked: {

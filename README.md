@@ -4,6 +4,8 @@ A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) bar plug
 [status.nixos.org](https://status.nixos.org) channel and lights up its Nix snowflake when the
 channel has moved past the nixpkgs revision pinned in your `flake.lock`.
 
+![Nix Channel Status popout on the Dank Bar](screenshot.png)
+
 The snowflake turns your accent colour when there is something to update:
 
 - **With a `flake.lock`** — the channel's revision differs from the one your lock pins, and the

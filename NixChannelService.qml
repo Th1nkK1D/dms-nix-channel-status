@@ -181,7 +181,15 @@ Item {
         triggeredOnStart: true
         onTriggered: {
             root.now = Date.now();
-            if (root.now >= root.nextDue && PluginService.isPluginLoaded(root.pluginId))
+            if (root.now >= root.nextDue && !root.linkDown && PluginService.isPluginLoaded(root.pluginId))
+                root.refresh();
+        }
+    }
+
+    Connections {
+        target: root
+        function onLinkDownChanged() {
+            if (!root.linkDown && (root.fetchError !== "" || Date.now() >= root.nextDue) && PluginService.isPluginLoaded(root.pluginId))
                 root.refresh();
         }
     }

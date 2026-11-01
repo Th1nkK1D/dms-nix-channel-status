@@ -33,4 +33,28 @@ PluginSettings {
                     value: c.channel
                 })))
     }
+
+    SelectionSetting {
+        settingKey: "idleColor"
+        label: "Idle icon color"
+        description: "Theme color of the snowflake when nothing is pending."
+        defaultValue: NixChannelService.defaultIdleColor
+        options: NixChannelService.colorOptions
+    }
+
+    SelectionSetting {
+        settingKey: "iconColor"
+        label: "Update icon color"
+        description: "Theme color the snowflake takes when an update is pending."
+        defaultValue: NixChannelService.defaultColor
+        options: NixChannelService.colorOptions
+    }
+
+    SelectionSetting {
+        settingKey: "dotColor"
+        label: "Update dot color"
+        description: "Theme color of the dot shown when an update is pending."
+        defaultValue: NixChannelService.defaultColor
+        options: NixChannelService.colorOptions
+    }
 }

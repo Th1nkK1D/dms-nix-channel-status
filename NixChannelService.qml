@@ -16,9 +16,19 @@ Item {
     readonly property int periodMs: 3600 * 1000
     readonly property int retryMs: 5 * 60 * 1000
 
+    readonly property string defaultColor: "primary"
+    readonly property string defaultIdleColor: "surfaceText"
+    readonly property var colorOptions: ["primary", "secondary", "tertiary", "surfaceText", "success", "info", "warning", "error"].map(token => ({
+                label: token,
+                value: token
+            }))
+
     property string channelSetting: autoChannel
     property string lockPath: ""
     property string inputName: "nixpkgs"
+    property string idleColorToken: defaultIdleColor
+    property string iconColorToken: defaultColor
+    property string dotColorToken: defaultColor
 
     property var channels: []
     property var _request: null
@@ -50,6 +60,9 @@ Item {
         channelSetting = PluginService.loadPluginData(pluginId, "channel", autoChannel) || autoChannel;
         lockPath = String(PluginService.loadPluginData(pluginId, "lockPath", "") || "").trim();
         inputName = String(PluginService.loadPluginData(pluginId, "input", "nixpkgs") || "").trim() || "nixpkgs";
+        idleColorToken = PluginService.loadPluginData(pluginId, "idleColor", defaultIdleColor) || defaultIdleColor;
+        iconColorToken = PluginService.loadPluginData(pluginId, "iconColor", defaultColor) || defaultColor;
+        dotColorToken = PluginService.loadPluginData(pluginId, "dotColor", defaultColor) || defaultColor;
         seen = PluginService.loadPluginState(pluginId, "seen", {}) || {};
         if (lockMode) {
             lockView.reload();

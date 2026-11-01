@@ -17,7 +17,7 @@ PluginComponent {
             anchors.centerIn: parent
             source: Qt.resolvedUrl("nix-snowflake.svg")
             size: root.iconSize
-            colorOverride: NixChannelService.behind ? Theme.primary : Theme.surfaceText
+            colorOverride: NixChannelService.behind ? (Theme[NixChannelService.iconColorToken] ?? Theme.primary) : (Theme[NixChannelService.idleColorToken] ?? Theme.surfaceText)
         }
 
         Rectangle {
@@ -25,7 +25,7 @@ PluginComponent {
             width: 8
             height: 8
             radius: 4
-            color: Theme.primary
+            color: Theme[NixChannelService.dotColorToken] ?? Theme.primary
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.topMargin: -2

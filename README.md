@@ -40,6 +40,9 @@ section under **Settings → Dank Bar**.
 | flake.lock path | lock to compare against; `~` is expanded                      | empty (seen mode) |
 | Flake input    | the input to read from the lock, as named in your `flake.nix`  | `nixpkgs`        |
 | Channel        | channel to watch; _Auto_ uses the input's branch (`original.ref`) | Auto, else `nixos-unstable` |
+| Idle icon color | theme color of the snowflake when nothing is pending          | `surfaceText`    |
+| Update icon color | theme color the snowflake takes when an update is pending   | `primary`        |
+| Update dot color | theme color of the pending-update dot                        | `primary`        |
 
 ## How it works
 

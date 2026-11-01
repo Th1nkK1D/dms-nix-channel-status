@@ -6,7 +6,7 @@ channel has moved past the nixpkgs revision pinned in your `flake.lock`.
 
 ![Nix Channel Status popout on the Dank Bar](screenshot.png)
 
-The snowflake turns your accent colour when there is something to update:
+The snowflake turns your accent colour and gains a dot when there is something to update:
 
 - **With a `flake.lock`** — the channel's revision differs from the one your lock pins, and the
   channel moved after your locked commit. It clears by itself once you `nix flake update`; the lock

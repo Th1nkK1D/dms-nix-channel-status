@@ -9,10 +9,28 @@ PluginComponent {
 
     popoutWidth: 380
 
-    component NixIcon: DSVGIcon {
-        source: Qt.resolvedUrl("nix-snowflake.svg")
-        size: root.iconSize
-        colorOverride: NixChannelService.behind ? Theme.primary : Theme.surfaceText
+    component NixIcon: Item {
+        implicitWidth: root.iconSize
+        implicitHeight: root.iconSize
+
+        DSVGIcon {
+            anchors.centerIn: parent
+            source: Qt.resolvedUrl("nix-snowflake.svg")
+            size: root.iconSize
+            colorOverride: NixChannelService.behind ? Theme.primary : Theme.surfaceText
+        }
+
+        Rectangle {
+            visible: NixChannelService.behind
+            width: 8
+            height: 8
+            radius: 4
+            color: Theme.primary
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.topMargin: -2
+            anchors.rightMargin: -2
+        }
     }
 
     horizontalBarPill: NixIcon {}

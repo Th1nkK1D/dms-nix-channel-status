@@ -42,7 +42,6 @@ PluginComponent {
             id: popoutRoot
 
             property var closePopout: null
-            property var parentPopout: null
 
             readonly property var current: NixChannelService.current
 
@@ -56,17 +55,16 @@ PluginComponent {
             PopoutComponent {
                 id: layout
                 width: parent.width
-                headerText: "Nix Channel Status"
-                closePopout: popoutRoot.closePopout
+                headerText: I18n.trFor("nixChannelStatus", "Nix Channel Status")
                 detailsText: {
                     const svc = NixChannelService;
                     if (svc.linkDown && !popoutRoot.current)
-                        return "No network connection.";
+                        return I18n.trFor("nixChannelStatus", "No network connection.");
                     if (svc.fetchError && !popoutRoot.current)
                         return svc.fetchError;
                     if (!popoutRoot.current)
-                        return svc.checking || svc.lastChecked === 0 ? "Checking…" : "Channel " + svc.channelName + " not found on status.nixos.org.";
-                    return svc.channelName + " · updated " + svc.formatAge(popoutRoot.current.updatedAt) + " · checked " + svc.formatAge(svc.lastChecked);
+                        return svc.checking || svc.lastChecked === 0 ? I18n.trFor("nixChannelStatus", "Checking…") : I18n.trFor("nixChannelStatus", "Channel %1 not found on status.nixos.org.").arg(svc.channelName);
+                    return I18n.trFor("nixChannelStatus", "%1 · updated %2 · checked %3").arg(svc.channelName).arg(svc.formatAge(popoutRoot.current.updatedAt)).arg(svc.formatAge(svc.lastChecked));
                 }
 
                 headerActions: Component {
@@ -75,7 +73,7 @@ PluginComponent {
 
                         DActionButton {
                             iconName: "open_in_new"
-                            tooltipText: "Open status.nixos.org"
+                            tooltipText: I18n.trFor("nixChannelStatus", "Open status.nixos.org")
                             onClicked: {
                                 Qt.openUrlExternally("https://status.nixos.org");
                                 popoutRoot.close();
@@ -84,7 +82,7 @@ PluginComponent {
 
                         DActionButton {
                             iconName: "settings"
-                            tooltipText: "Open plugin settings"
+                            tooltipText: I18n.trFor("nixChannelStatus", "Open plugin settings")
                             onClicked: {
                                 popoutRoot.close();
                                 PopoutService.openSettingsWithTab("plugins");
@@ -93,7 +91,7 @@ PluginComponent {
 
                         DActionButton {
                             iconName: "refresh"
-                            tooltipText: "Check now"
+                            tooltipText: I18n.trFor("nixChannelStatus", "Check now")
                             enabled: !NixChannelService.checking
                             onClicked: NixChannelService.refresh()
                         }
@@ -115,13 +113,15 @@ PluginComponent {
                                 return svc.lockError;
                             if (!cur)
                                 return "";
+                            const base = svc.shortRev(svc.baseRevision);
+                            const rev = svc.shortRev(cur.revision);
                             if (svc.inSync)
-                                return "Up to date · " + svc.shortRev(cur.revision);
+                                return I18n.trFor("nixChannelStatus", "Up to date · %1").arg(rev);
                             if (svc.behind)
-                                return (svc.lockMode ? "Update available · " : "New revision · ") + svc.shortRev(svc.baseRevision) + " → " + svc.shortRev(cur.revision);
+                                return (svc.lockMode ? I18n.trFor("nixChannelStatus", "Update available · %1 → %2") : I18n.trFor("nixChannelStatus", "New revision · %1 → %2")).arg(base).arg(rev);
                             if (svc.lockMode && svc.lock)
-                                return "Locked " + svc.shortRev(svc.baseRevision) + " is newer than " + svc.shortRev(cur.revision);
-                            return "Revision " + svc.shortRev(cur.revision);
+                                return I18n.trFor("nixChannelStatus", "Locked %1 is newer than %2").arg(base).arg(rev);
+                            return I18n.trFor("nixChannelStatus", "Revision %1").arg(rev);
                         }
                         font.pixelSize: Theme.fontSizeMedium
                         font.weight: Font.Medium
@@ -132,7 +132,7 @@ PluginComponent {
                     StyledText {
                         width: parent.width - parent.leftPadding
                         visible: NixChannelService.fetchError !== "" && popoutRoot.current !== null
-                        text: NixChannelService.fetchError + " — showing the last result."
+                        text: I18n.trFor("nixChannelStatus", "%1 — showing the last result.").arg(NixChannelService.fetchError)
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.error
                         wrapMode: Text.WordWrap
@@ -144,7 +144,7 @@ PluginComponent {
 
                         DButton {
                             buttonHeight: 32
-                            text: "Compare"
+                            text: I18n.trFor("nixChannelStatus", "Compare")
                             iconName: "open_in_new"
                             onClicked: {
                                 Qt.openUrlExternally(NixChannelService.compareUrl());
@@ -155,7 +155,7 @@ PluginComponent {
                         DButton {
                             buttonHeight: 32
                             visible: !NixChannelService.lockMode
-                            text: "Mark seen"
+                            text: I18n.trFor("nixChannelStatus", "Mark seen")
                             iconName: "done"
                             onClicked: NixChannelService.markSeen()
                         }

@@ -13,20 +13,26 @@ const lock = JSON.stringify({
     root: "root",
     version: 7,
     nodes: {
-        root: { inputs: { nixpkgs: "nixpkgs_2", tools: "tools", pinned: ["tools", "nixpkgs"], tarball: "tarball", git: "git" } },
+        root: { inputs: { nixpkgs: "nixpkgs_2", tools: "tools", pinned: ["tools", "nixpkgs"], tarball: "tarball", git: "git", channel: "channel", flakehub: "flakehub", master: "master" } },
         tools: { inputs: { nixpkgs: "nixpkgs" }, locked: { rev: "t00l" } },
         nixpkgs: { locked: { rev: "decoy", lastModified: 1 }, original: { ref: "nixpkgs-unstable" } },
         nixpkgs_2: { locked: { rev: "mine", lastModified: 1793110635 }, original: { ref: "nixos-unstable" } },
         tarball: { locked: { narHash: "sha256-x" } },
-        git: { locked: { rev: "g1t" }, original: { type: "git", ref: "refs/heads/nixos-25.11" } }
+        git: { locked: { rev: "g1t" }, original: { type: "git", ref: "refs/heads/nixos-25.11" } },
+        channel: { locked: { rev: "ch4n" }, original: { type: "tarball", url: "https://channels.nixos.org/nixos-25.05/nixexprs.tar.xz" } },
+        flakehub: { locked: { rev: "fh" }, original: { type: "tarball", url: "https://flakehub.com/f/NixOS/nixpkgs/0.2505.%2A.tar.gz" } },
+        master: { locked: { rev: "m4st" }, original: { type: "github", owner: "NixOS", repo: "nixpkgs" } }
     }
 });
 
 assert.deepEqual(ctx.parseLock(lock, "nixpkgs"),{ rev: "mine", lastModified: 1793110635000, ref: "nixos-unstable" });
 assert.equal(ctx.parseLock(lock, "pinned").rev, "decoy");
-assert.throws(() => ctx.parseLock(lock, "missing"), /no input "missing"/);
-assert.throws(() => ctx.parseLock(lock, "tarball"), /no git revision/);
+assert.equal(ctx.parseLock(lock, "missing"), null);
+assert.equal(ctx.parseLock(lock, "tarball").rev, "");
 assert.equal(ctx.parseLock(lock, "git").ref, "nixos-25.11");
+assert.equal(ctx.parseLock(lock, "channel").ref, "nixos-25.05");
+assert.equal(ctx.parseLock(lock, "flakehub").ref, "nixos-25.05");
+assert.equal(ctx.parseLock(lock, "master").ref, "");
 
 const prom = JSON.stringify({
     status: "success",

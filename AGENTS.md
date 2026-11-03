@@ -28,7 +28,10 @@ user-chosen `flake.lock`.
 - Lock: resolve the input via `nodes.root.inputs[<input>]`, never by node name — the node literally
   named `nixpkgs` may belong to another input (`nixpkgs_2` is the user's in practice). An input value
   that is an array is a `follows` path to walk from root. Use `locked.rev`, `locked.lastModified`,
-  `original.ref` (default channel).
+  and for the Auto channel `original.ref`, else the channel/FlakeHub version in `original.url`.
+- Ahead/behind: `https://api.github.com/repos/NixOS/nixpkgs/compare/<lock>...<channel>?per_page=1&page=2`
+  → `status` (`ahead` = channel has new commits, `behind`, `diverged`). Page 2 drops the multi-MB
+  commit/file lists. Unauthenticated limit is 60/h, so only call it when the pair changes.
 - agent-guard blocks shell commands that mention a `flake.lock` path; inspect lock files with the
   Read tool instead.
 

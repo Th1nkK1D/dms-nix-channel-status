@@ -31,6 +31,21 @@ function parseChannels(text) {
     return channels;
 }
 
+// Channel tarballs (channels.nixos.org/<channel>/nixexprs.tar.xz) and FlakeHub releases
+// (flakehub.com/f/NixOS/nixpkgs/0.2505.*) carry the channel in the URL rather than a ref.
+function channelOf(original) {
+    if (!original)
+        return "";
+    if (original.ref)
+        return original.ref.replace(/^refs\/heads\//, "");
+    const url = original.url || "";
+    const flakehub = url.match(/flakehub\.com\/f\/NixOS\/nixpkgs\/0\.(\d\d)(\d\d)\./);
+    if (flakehub)
+        return "nixos-" + flakehub[1] + "." + flakehub[2];
+    const tarball = url.match(/\/((?:nixos|nixpkgs)-[^/]+)\/nixexprs\.tar\.xz/);
+    return tarball ? tarball[1] : "";
+}
+
 // Input refs are a node name, or a `follows` path of input names walked from the root node.
 function parseLock(text, input) {
     const lock = JSON.parse(text);
@@ -44,12 +59,10 @@ function parseLock(text, input) {
     };
     const node = nodes[resolve((nodes[lock.root].inputs || {})[input])];
     if (!node)
-        throw new Error("no input \"" + input + "\" in flake.lock");
-    if (!node.locked || !node.locked.rev)
-        throw new Error("input \"" + input + "\" has no git revision");
+        return null;
     return {
-        rev: node.locked.rev,
-        lastModified: (node.locked.lastModified || 0) * 1000,
-        ref: ((node.original && node.original.ref) || "").replace(/^refs\/heads\//, "")
+        rev: (node.locked && node.locked.rev) || "",
+        lastModified: ((node.locked && node.locked.lastModified) || 0) * 1000,
+        ref: channelOf(node.original)
     };
 }

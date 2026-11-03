@@ -6,16 +6,17 @@ channel has moved past the nixpkgs revision pinned in your `flake.lock`.
 
 ![Nix Channel Status popout on the Dank Bar](screenshot.png)
 
-The snowflake turns your accent colour and gains a dot when there is something to update:
+The snowflake changes color (accent by default, configurable) and gains a dot when there is
+something to update:
 
-- **With a `flake.lock`** — the channel's revision differs from the one your lock pins, and the
-  channel moved after your locked commit. It clears by itself once you `nix flake update`; the lock
-  file is watched, so no refresh is needed.
+- **With a `flake.lock`** — the channel has commits your locked revision doesn't. It clears by
+  itself once you `nix flake update`; the lock file is watched, so no refresh is needed.
 - **Without one** — the channel has a revision you haven't marked seen yet.
 
 Click it for a popout with the channel, when it last updated, `Up to date · 31ecbac` or
 `Update available · f05535a → 31ecbac`, and a **Compare** button that opens the GitHub diff
-between the two. The header has a settings shortcut and **Check now**.
+between the two. The header has buttons to open status.nixos.org, open the plugin settings, and
+**Check now**.
 
 ## Requirements
 
@@ -35,14 +36,14 @@ section under **Settings → Dank Bar**.
 
 **Settings → Plugins → Nix Channel Status**:
 
-| Field          | Meaning                                                        | Default          |
-| -------------- | -------------------------------------------------------------- | ---------------- |
-| flake.lock path | lock to compare against; `~` is expanded                      | empty (seen mode) |
-| Flake input    | the input to read from the lock, as named in your `flake.nix`  | `nixpkgs`        |
-| Channel        | channel to watch; _Auto_ uses the input's branch (`original.ref`) | Auto, else `nixos-unstable` |
-| Idle icon color | theme color of the snowflake when nothing is pending          | `surfaceText`    |
-| Update icon color | theme color the snowflake takes when an update is pending   | `primary`        |
-| Update dot color | theme color of the pending-update dot                        | `primary`        |
+| Field             | Meaning                                                                                  | Default                     |
+| ----------------- | ---------------------------------------------------------------------------------------- | --------------------------- |
+| flake.lock path   | lock file, or the flake directory holding it; `~` and paths relative to home are expanded | empty (seen mode)           |
+| Flake input       | the input to read from the lock, as named in your `flake.nix`                            | `nixpkgs`                   |
+| Channel           | channel to watch; _Auto_ uses the input's branch, channel tarball or FlakeHub version     | Auto, else `nixos-unstable` |
+| Idle icon color   | theme color of the snowflake when nothing is pending                                     | Surface text                |
+| Update icon color | theme color the snowflake takes when an update is pending                                | Primary                     |
+| Update dot color  | theme color of the pending-update dot                                                    | Primary                     |
 
 ## How it works
 
@@ -53,7 +54,10 @@ so a missed check after suspend or an offline stretch runs within a minute of co
 or empty answer is retried after 5 minutes and the last good result stays on screen.
 
 The lock input is resolved through the root node's `inputs`, following `follows` paths, so another
-input's pinned nixpkgs is never mistaken for yours.
+input's pinned nixpkgs is never mistaken for yours. When your locked commit is older than the
+channel's last update, one call to GitHub's compare API tells whether the channel is actually
+ahead of it (a lock on `master` can be newer than the channel); until that answers, or if it
+fails, the update is assumed.
 
 ## Development
 
